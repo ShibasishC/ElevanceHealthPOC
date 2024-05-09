@@ -1,1 +1,47 @@
+```python
+# imports
+import pytest  # used for our unit tests
 
+# function to test
+def factorial(x):
+    if x == 1:
+        return 1
+    else:
+        return (x * factorial(x-1))
+
+# unit tests
+# below, each test case is represented by a tuple passed to the @pytest.mark.parametrize decorator
+
+# Test the function's behavior for positive integer inputs
+@pytest.mark.parametrize("test_input, expected_output", [(5, 120), (3, 6)])
+def test_factorial_positive_integers(test_input, expected_output):
+    assert factorial(test_input) == expected_output
+
+# Test the function's behavior when input is 1
+def test_factorial_one():
+    assert factorial(1) == 1
+
+# Test the function's behavior when input is 0
+def test_factorial_zero():
+    assert factorial(0) == 1
+
+# Test the function's behavior for negative integer inputs
+def test_factorial_negative_integers():
+    with pytest.raises(RecursionError):
+        factorial(-5)
+
+# Test the function's behavior for non-integer inputs
+def test_factorial_non_integer():
+    with pytest.raises(TypeError):
+        factorial(2.5)
+    with pytest.raises(TypeError):
+        factorial('a')
+
+# Test the function's behavior for large integer inputs
+def test_factorial_large_input():
+    # This test might take a long time to run or might cause a RecursionError
+    # depending on the Python interpreter's recursion limit
+    with pytest.raises(RecursionError):
+        factorial(1000)
+```
+This suite of unit tests covers a wide range of possible inputs and edge cases for the `factorial` function. Each test asserts that the function behaves as expected under different conditions. If any of these assertions fail, that means there's a bug in the function that needs to be fixed.
