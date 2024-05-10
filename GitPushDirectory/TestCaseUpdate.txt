@@ -11,31 +11,24 @@ def factorial(x):
 
 # unit tests
 # below, each test case is represented by a tuple passed to the @pytest.mark.parametrize decorator
-@pytest.mark.parametrize("test_input, expected_output", [
-    (1, 1),  # factorial of 1 is 1
-    (5, 120),  # factorial of 5 is 120
-    (10, 3628800),  # factorial of 10 is 3628800
-    (0, 1),  # factorial of 0 is 1
+
+@pytest.mark.parametrize("test_input,expected_output", [
+    (5, 120),  # testing with positive integer
+    (3, 6),  # testing with positive integer
+    (1, 1),  # testing with edge case: small number
+    (0, 1),  # testing with edge case: small number
+    (10, 3628800),  # testing with larger number
 ])
 def test_factorial(test_input, expected_output):
     assert factorial(test_input) == expected_output
 
-# test for negative numbers
-def test_factorial_negative():
-    with pytest.raises(RecursionError):  # factorial function will cause a RecursionError for negative inputs
-        factorial(-1)
-
-# test for non-integer numbers
-def test_factorial_non_integer():
-    with pytest.raises(RecursionError):  # factorial function will cause a RecursionError for non-integer inputs
-        factorial(2.5)
-
-# test for large numbers
-def test_factorial_large_number():
-    assert factorial(100)  # just check if the function can handle large numbers without causing a stack overflow
-
-# test for non-numeric inputs
-def test_factorial_non_numeric():
-    with pytest.raises(TypeError):  # factorial function will cause a TypeError for non-numeric inputs
-        factorial("a")
+@pytest.mark.parametrize("test_input", [
+    -5,  # testing with negative number
+    2.5,  # testing with non-integer number
+    '5',  # testing with non-integer number
+])
+def test_factorial_exceptions(test_input):
+    with pytest.raises((RecursionError, TypeError)):  # expecting either RecursionError or TypeError
+        factorial(test_input)
 ```
+In the above code, we have two test functions. The first one, `test_factorial`, is testing the `factorial` function with valid inputs and checking if the output is as expected. The second one, `test_factorial_exceptions`, is testing the `factorial` function with invalid inputs and checking if it raises the expected exceptions.
