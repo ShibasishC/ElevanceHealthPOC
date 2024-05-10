@@ -1,6 +1,7 @@
 ```python
 # imports
 import pytest  # used for our unit tests
+import sys  # used to get the maximum recursion depth
 
 # function to test
 def factorial(x):
@@ -10,30 +11,30 @@ def factorial(x):
         return (x * factorial(x-1))
 
 # unit tests
-# below, each test case is represented by a tuple passed to the @pytest.mark.parametrize decorator
+@pytest.mark.parametrize("test_input,expected", [(1, 1), (5, 120), (10, 3628800), (0, 1)])
+def test_factorial_positive_integers(test_input, expected):
+    # Test that the factorial function returns the correct output for positive integers
+    assert factorial(test_input) == expected
 
-# Test the function's behavior for a wide range of possible inputs
-@pytest.mark.parametrize("test_input, expected_output", [(5, 120), (3, 6)])
-def test_factorial_positive_integers(test_input, expected_output):
-    assert factorial(test_input) == expected_output
-
-# Test edge cases that the author may not have foreseen
-@pytest.mark.parametrize("test_input, expected_output", [(1, 1), (0, 1)])
-def test_factorial_edge_cases(test_input, expected_output):
-    assert factorial(test_input) == expected_output
-
-# Test the function's behavior with large numbers
-def test_factorial_large_numbers():
-    assert factorial(100)  # Just check if it doesn't crash
-
-# Test the function's behavior with negative numbers
-def test_factorial_negative_numbers():
-    with pytest.raises(RecursionError):
+def test_factorial_negative_integers():
+    # Test that the factorial function raises a ValueError for negative integers
+    with pytest.raises(ValueError):
         factorial(-5)
 
-# Test the function's behavior with non-integer inputs
-@pytest.mark.parametrize("test_input", [5.5, "five"])
+@pytest.mark.parametrize("test_input", [2.5, "abc"])
 def test_factorial_non_integer_inputs(test_input):
+    # Test that the factorial function raises a TypeError for non-integer inputs
     with pytest.raises(TypeError):
         factorial(test_input)
+
+def test_factorial_large_numbers():
+    # Test that the factorial function can handle large numbers up to the maximum recursion depth
+    max_recursion_depth = sys.getrecursionlimit() - 1  # Subtract 1 to account for the initial function call
+    assert factorial(max_recursion_depth) is not None  # We don't check the exact output, just that it doesn't cause a stack overflow
+
+def test_factorial_edge_cases():
+    # Test that the factorial function can handle the edge cases of 0 and the maximum integer
+    assert factorial(0) == 1
+    with pytest.raises(RecursionError):
+        factorial(sys.maxsize)  # This should exceed the maximum recursion depth
 ```
