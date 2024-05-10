@@ -12,20 +12,28 @@ def maximum(a, b):
 # unit tests
 # below, each test case is represented by a tuple passed to the @pytest.mark.parametrize decorator
 @pytest.mark.parametrize("a, b, expected", [
-    (2, 4, 4),  # testing with positive numbers
-    (10, 5, 10),  # testing with positive numbers
-    (-2, -4, -2),  # testing with negative numbers
-    (-10, -5, -5),  # testing with negative numbers
-    (0, 4, 4),  # testing with zero
-    (-2, 0, 0),  # testing with zero
-    (3, 3, 3),  # testing with equal numbers
-    (-5, -5, -5),  # testing with equal numbers
-    (2.5, 4.5, 4.5),  # testing with floating point numbers
-    (-2.5, -1.5, -1.5),  # testing with floating point numbers
-    (1000000, 500000, 1000000),  # testing with large numbers
-    (-1000000, -500000, -500000)  # testing with large numbers
+    # Scenario 1: Both inputs are positive numbers
+    (2, 4, 4),
+    (10, 5, 10),
+    (7, 7, 7),
+    # Scenario 2: Both inputs are negative numbers
+    (-2, -4, -2),
+    (-10, -5, -5),
+    (-7, -7, -7),
+    # Scenario 3: One input is positive and the other is negative
+    (2, -4, 2),
+    (-10, 5, 5),
+    # Scenario 4: One or both inputs are zero
+    (0, 4, 4),
+    (-10, 0, 0),
+    (0, 0, 0),
+    # Scenario 5: Inputs are floating point numbers
+    (2.5, 4.5, 4.5),
+    (-10.5, 5.5, 5.5),
+    (0.0, 0.0, 0.0)
 ])
 def test_maximum(a, b, expected):
+    # The function maximum is called with the parameters a and b, and its return value is compared to the expected result.
     assert maximum(a, b) == expected
 ```
-In the above code, `@pytest.mark.parametrize` is a decorator provided by pytest that allows you to pass multiple sets of arguments to a test function. It is followed by a list of tuples, where each tuple represents a test case. The first two elements of each tuple are the inputs to the `maximum` function, and the third element is the expected output. The `test_maximum` function then asserts that the output of the `maximum` function matches the expected output for each set of inputs.
+This suite of tests uses the `pytest.mark.parametrize` decorator to run the `test_maximum` function once for each tuple of parameters. The `test_maximum` function asserts that the `maximum` function returns the expected result when called with the given parameters.
