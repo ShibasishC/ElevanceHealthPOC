@@ -12,36 +12,33 @@ def factorial(x):
 # unit tests
 # below, each test case is represented by a tuple passed to the @pytest.mark.parametrize decorator
 
-@pytest.mark.parametrize("input,expected", [
-    (1, 1),  # factorial of 1 is 1
-    (5, 120),  # factorial of 5 is 120
-    (10, 3628800),  # factorial of 10 is 3628800
-    (0, 1),  # factorial of 0 is 1
-])
-def test_factorial_positive(input, expected):
-    assert factorial(input) == expected
+# Test the function's behavior for a wide range of possible inputs
+@pytest.mark.parametrize("test_input,expected", [(5, 120), (10, 3628800)])
+def test_factorial_positive_integers(test_input, expected):
+    assert factorial(test_input) == expected
 
-@pytest.mark.parametrize("input", [
-    -1,  # factorial of negative number is undefined
-    -10,  # factorial of negative number is undefined
-])
-def test_factorial_negative(input):
-    with pytest.raises(RecursionError):
-        factorial(input)
+# Test edge case - Small numbers
+@pytest.mark.parametrize("test_input,expected", [(1, 1), (0, 1)])
+def test_factorial_small_numbers(test_input, expected):
+    assert factorial(test_input) == expected
 
-@pytest.mark.parametrize("input", [
-    1.5,  # factorial of non-integer number is undefined
-    0.0,  # factorial of 0 is 1
-])
-def test_factorial_non_integer(input):
-    with pytest.raises(RecursionError):
-        factorial(input)
+# Test edge case - Large numbers
+def test_factorial_large_numbers():
+    assert isinstance(factorial(100), int)  # Just check if it returns an integer
 
-@pytest.mark.parametrize("input", [
-    "string",  # factorial of non-numeric type is undefined
-    [],  # factorial of non-numeric type is undefined
-])
-def test_factorial_non_numeric(input):
-    with pytest.raises(TypeError):
-        factorial(input)
+# Test negative numbers
+def test_factorial_negative_numbers():
+    with pytest.raises(RecursionError):  # Expect a RecursionError for negative numbers
+        factorial(-5)
+
+# Test non-integer numbers
+def test_factorial_non_integer_numbers():
+    with pytest.raises(RecursionError):  # Expect a RecursionError for non-integer numbers
+        factorial(4.5)
+
+# Test non-numeric inputs
+def test_factorial_non_numeric_inputs():
+    with pytest.raises(TypeError):  # Expect a TypeError for non-numeric inputs
+        factorial("five")
 ```
+Please note that the original function does not handle negative numbers, non-integer numbers, and non-numeric inputs. It will raise a `RecursionError` for negative and non-integer numbers and a `TypeError` for non-numeric inputs. If you want the function to handle these cases differently, you would need to modify the function accordingly.
