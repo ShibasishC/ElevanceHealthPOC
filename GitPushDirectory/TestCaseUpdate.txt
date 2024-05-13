@@ -12,23 +12,36 @@ def factorial(x):
 # unit tests
 # below, each test case is represented by a tuple passed to the @pytest.mark.parametrize decorator
 
-@pytest.mark.parametrize("test_input,expected_output", [
-    (5, 120),  # testing with positive integer
-    (3, 6),  # testing with positive integer
-    (1, 1),  # testing with edge case: small number
-    (0, 1),  # testing with edge case: small number
-    (10, 3628800),  # testing with larger number
+@pytest.mark.parametrize("input,expected", [
+    (1, 1),  # factorial of 1 is 1
+    (5, 120),  # factorial of 5 is 120
+    (10, 3628800),  # factorial of 10 is 3628800
+    (0, 1),  # factorial of 0 is 1
 ])
-def test_factorial(test_input, expected_output):
-    assert factorial(test_input) == expected_output
+def test_factorial_positive(input, expected):
+    assert factorial(input) == expected
 
-@pytest.mark.parametrize("test_input", [
-    -5,  # testing with negative number
-    2.5,  # testing with non-integer number
-    '5',  # testing with non-integer number
+@pytest.mark.parametrize("input", [
+    -1,  # factorial of negative number is undefined
+    -10,  # factorial of negative number is undefined
 ])
-def test_factorial_exceptions(test_input):
-    with pytest.raises((RecursionError, TypeError)):  # expecting either RecursionError or TypeError
-        factorial(test_input)
+def test_factorial_negative(input):
+    with pytest.raises(RecursionError):
+        factorial(input)
+
+@pytest.mark.parametrize("input", [
+    1.5,  # factorial of non-integer number is undefined
+    0.0,  # factorial of 0 is 1
+])
+def test_factorial_non_integer(input):
+    with pytest.raises(RecursionError):
+        factorial(input)
+
+@pytest.mark.parametrize("input", [
+    "string",  # factorial of non-numeric type is undefined
+    [],  # factorial of non-numeric type is undefined
+])
+def test_factorial_non_numeric(input):
+    with pytest.raises(TypeError):
+        factorial(input)
 ```
-In the above code, we have two test functions. The first one, `test_factorial`, is testing the `factorial` function with valid inputs and checking if the output is as expected. The second one, `test_factorial_exceptions`, is testing the `factorial` function with invalid inputs and checking if it raises the expected exceptions.
