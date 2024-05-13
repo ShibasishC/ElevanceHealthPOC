@@ -1,1 +1,39 @@
-This HTTP triggered function executed successfully. Pass data in the query string or in the request body for a personalized response.
+```python
+# imports
+import pytest  # used for our unit tests
+
+# function to test
+def factorial(x):
+    if x == 1:
+        return 1
+    else:
+        return (x * factorial(x-1))
+
+# unit tests
+# below, each test case is represented by a tuple passed to the @pytest.mark.parametrize decorator
+
+# Test for positive integer inputs
+@pytest.mark.parametrize("test_input, expected_output", [(5, 120), (3, 6), (10, 3628800)])
+def test_factorial_positive_integers(test_input, expected_output):
+    assert factorial(test_input) == expected_output
+
+# Test for zero input
+def test_factorial_zero():
+    assert factorial(0) == 1
+
+# Test for negative integer inputs
+def test_factorial_negative_integers():
+    with pytest.raises(RecursionError):
+        factorial(-5)
+
+# Test for non-integer inputs
+def test_factorial_non_integer():
+    with pytest.raises(RecursionError):
+        factorial(2.5)
+    with pytest.raises(TypeError):
+        factorial("5")
+
+# Test for large integer inputs
+def test_factorial_large_input():
+    assert factorial(100) == 93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000
+```
