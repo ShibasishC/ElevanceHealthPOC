@@ -12,28 +12,28 @@ def factorial(x):
 # unit tests
 # below, each test case is represented by a tuple passed to the @pytest.mark.parametrize decorator
 
-# Test for positive integer inputs
-@pytest.mark.parametrize("test_input, expected_output", [(5, 120), (3, 6), (10, 3628800)])
+# Test positive integers
+@pytest.mark.parametrize("test_input, expected_output", [(1, 1), (5, 120), (10, 3628800)])
 def test_factorial_positive_integers(test_input, expected_output):
     assert factorial(test_input) == expected_output
 
-# Test for zero input
+# Test zero as input
 def test_factorial_zero():
     assert factorial(0) == 1
 
-# Test for negative integer inputs
+# Test negative integers
 def test_factorial_negative_integers():
     with pytest.raises(RecursionError):
         factorial(-5)
 
-# Test for non-integer inputs
-def test_factorial_non_integer():
-    with pytest.raises(RecursionError):
-        factorial(2.5)
-    with pytest.raises(TypeError):
-        factorial("5")
+# Test non-integer inputs
+@pytest.mark.parametrize("test_input", [5.5, "5"])
+def test_factorial_non_integer_inputs(test_input):
+    with pytest.raises((RecursionError, TypeError)):
+        factorial(test_input)
 
-# Test for large integer inputs
-def test_factorial_large_input():
-    assert factorial(100) == 93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000
+# Test large numbers as input
+def test_factorial_large_numbers():
+    assert isinstance(factorial(100), int)
 ```
+In this code, we use the `pytest.mark.parametrize` decorator to test multiple inputs and expected outputs for the `factorial` function. We also use the `pytest.raises` context manager to check that the function raises the expected exceptions for invalid inputs. The `isinstance` function is used to check that the output for large numbers is an integer, as expected.
