@@ -1,39 +1,15 @@
+class Person:
+  def __init__(self, fname, lname):
+    self.firstname = fname
+    self.lastname = lname
 
-def openAICall(msg_text):
-  completion = client.chat.completions.create(
-  model="PepsicoPOC", # model = "deployment_name"
-  messages = msg_text,
-  temperature=0.7,
-  max_tokens=800,
-  top_p=0.95,
-  frequency_penalty=0,
-  presence_penalty=0,
-  stop=None)
+  def printname(self):
+    print(self.firstname, self.lastname)
 
-  return completion
+class Student(Person):
+  def __init__(self, fname, lname, year):
+    super().__init__(fname, lname)
+    self.graduationyear = year
 
-
-
-def intentDetection(intent_input):
-  intent_text = [{"role":"system","content":""" You are an AI that strictly classifies each user input into one of the following intents :-
-
-                1. "Welcome" Intent : When ever the user is greeting , Example :- Hi, Hello, Hey, Good morning, etc.
-                2. "Create" Intent : When ever the user wants to create Epics on somthing. Examples :- "I want to create JIRA Epics on claim intake", "create Epics on abc", etc
-                3. "Upload" Intent : When User strictly confirms that Epic Created is okay or complete. Examples :- "I think this is good enough" , "That's great", "This is good", "This is fine", "Upload it to Jira", etc
-                4. "Update" Intent : All other User inputs that do not strictly fulfill the definition of "Welcome", "Create" and "Upload" intent. Example:- "I think this is good enough but change the user story a bit to include ABC", "Do changes in Acceptance criteria", "Add ABC to User story or Description or Acceptance criteria" etc.
-                5. "Close" Intent : If User inputs are like "Thank you", "Thanks", "Bye", "Good bye", "Close", etc
-
-                RULE : Output must ONLY be in the following JSON format syntax ONLY : { "Intent" : "Intent data from the above 5 intents" }
-                RULE : All Inputs must be classifies into one of the 5 intents ONLY.
-                RULE : Outputs should only be the JSON with intent and intent data and nothing else.
-
-                NOTE : Do not add any explanation , special characters or extra spaces in the output"""}]
-
-  query = [{"role":"user","content": str(intent_input)}]
-  intent_text = intent_text + query
-
-  #print(intent_text)
-
-  completion = openAICall(intent_text)
-  intent_completion = completion.choices[0].message.content
-  return intent_completion
+x = Student("Mike", "Olsen", 2019)
+print(x.graduationyear)
