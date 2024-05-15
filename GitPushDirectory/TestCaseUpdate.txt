@@ -17,29 +17,40 @@ class Student(Person):
         self.graduationyear = year
 
 # unit tests
-@pytest.mark.parametrize("fname, lname, expected", [
+@pytest.mark.parametrize("fname, lname, expected_name", [
     ("John", "Doe", "John Doe"),  # testing with normal inputs
-    ("Jane", "Smith", "Jane Smith"),  # testing with normal inputs
+    ("Jane", "Smith", "Jane Smith"),  # testing with different inputs
+    ("", "", " "),  # testing with empty strings
 ])
-def test_person_printname(fname, lname, expected):
+def test_person(fname, lname, expected_name):
     person = Person(fname, lname)
-    assert person.printname() == expected  # the printname method should return the full name
+    assert person.firstname == fname
+    assert person.lastname == lname
+    assert person.printname() == expected_name
 
-@pytest.mark.parametrize("fname, lname, year, expected", [
-    ("Mike", "Olsen", 2019, "Mike Olsen"),  # testing with normal inputs
-    ("Anna", "Johnson", 2022, "Anna Johnson"),  # testing with normal inputs
+@pytest.mark.parametrize("fname, lname, year, expected_name, expected_year", [
+    ("Mike", "Olsen", 2019, "Mike Olsen", 2019),  # testing with normal inputs
+    ("Anna", "Johnson", 2022, "Anna Johnson", 2022),  # testing with different inputs
+    ("", "", 0, " ", 0),  # testing with empty strings and zero year
 ])
-def test_student_printname(fname, lname, year, expected):
+def test_student(fname, lname, year, expected_name, expected_year):
     student = Student(fname, lname, year)
-    assert student.printname() == expected  # the printname method should return the full name
+    assert student.firstname == fname
+    assert student.lastname == lname
+    assert student.graduationyear == year
+    assert student.printname() == expected_name
 
-@pytest.mark.parametrize("fname, lname, year, expected", [
-    ("Mike", "Olsen", 2019, 2019),  # testing with normal inputs
-    ("Anna", "Johnson", 2022, 2022),  # testing with normal inputs
-])
-def test_student_graduationyear(fname, lname, year, expected):
-    student = Student(fname, lname, year)
-    assert student.graduationyear == expected  # the graduationyear attribute should match the input
+def test_inheritance():
+    student = Student("Mike", "Olsen", 2019)
+    assert hasattr(student, 'printname')  # testing if Student class has inherited printname method from Person class
+
+def test_exceptions():
+    with pytest.raises(TypeError):
+        Person()  # testing if TypeError is raised when no arguments are passed
+    with pytest.raises(TypeError):
+        Student("Mike", "Olsen")  # testing if TypeError is raised when year is not passed
+    with pytest.raises(AttributeError):
+        person = Person("John", "Doe")
+        print(person.graduationyear)  # testing if AttributeError is raised when trying to access an attribute that doesn't exist
 ```
-
-Note: The `printname` method in the `Person` and `Student` classes has been modified to return a string instead of printing it. This is because it's not straightforward to test print statements with pytest. By returning a string, we can easily compare the output of the method to the expected output.
+In the code above, I have modified the `printname` method to return a string instead of printing it, as it's easier to test functions that return values. The `pytest.mark.parametrize` decorator is used to run the same test function with different arguments. The `hasattr` function is used to check if an object has a given attribute. The `pytest.raises` context manager is used to check if a specific exception is raised.
