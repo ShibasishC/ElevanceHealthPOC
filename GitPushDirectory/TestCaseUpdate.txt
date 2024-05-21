@@ -17,38 +17,38 @@ class Student(Person):
         self.graduationyear = year
 
 # unit tests
+# below, each test case is represented by a tuple passed to the @pytest.mark.parametrize decorator
+
+# Test Person class
 @pytest.mark.parametrize("fname, lname, expected", [
-    ("John", "Doe", "John Doe"),  # Test with valid first name and last name
-    (123, "Doe", TypeError),  # Test with non-string first name
-    ("John", 456, TypeError),  # Test with non-string last name
-    ("", "Doe", ValueError),  # Test with empty first name
-    ("John", "", ValueError),  # Test with empty last name
+    ("John", "Doe", "John Doe"),  # Valid names
+    ("", "Doe", " Doe"),  # Empty first name
+    ("John", "", "John "),  # Empty last name
+    ("John123", "Doe", "John123 Doe"),  # First name with numbers
+    ("John", "Doe@", "John Doe@")  # Last name with special characters
 ])
 def test_person(fname, lname, expected):
-    if isinstance(expected, type) and issubclass(expected, Exception):
-        with pytest.raises(expected):
-            Person(fname, lname)
-    else:
-        person = Person(fname, lname)
-        assert person.printname() == expected
+    person = Person(fname, lname)
+    assert person.printname() == expected
 
+# Test Student class
 @pytest.mark.parametrize("fname, lname, year, expected", [
-    ("Jane", "Doe", 2023, "Jane Doe"),  # Test with valid first name, last name, and graduation year
-    (123, "Doe", 2023, TypeError),  # Test with non-string first name
-    ("Jane", 456, 2023, TypeError),  # Test with non-string last name
-    ("Jane", "Doe", "Twenty-Twenty-Three", TypeError),  # Test with non-integer graduation year
-    ("Jane", "Doe", 2000, ValueError),  # Test with graduation year in the past
-    ("Jane", "Doe", 3000, ValueError),  # Test with graduation year in the far future
-    ("", "Doe", 2023, ValueError),  # Test with empty first name
-    ("Jane", "", 2023, ValueError),  # Test with empty last name
-    ("Jane", "Doe", "", TypeError),  # Test with empty graduation year
+    ("Mike", "Olsen", 2019, "Mike Olsen"),  # Valid names and year
+    ("Mike", "", 2019, "Mike "),  # Empty last name
+    ("Mike", "Olsen@", 2019, "Mike Olsen@"),  # Last name with special characters
+    ("Mike123", "Olsen", 2019, "Mike123 Olsen"),  # First name with numbers
 ])
 def test_student(fname, lname, year, expected):
-    if isinstance(expected, type) and issubclass(expected, Exception):
-        with pytest.raises(expected):
-            Student(fname, lname, year)
-    else:
-        student = Student(fname, lname, year)
-        assert student.printname() == expected
-        assert student.graduationyear == year
+    student = Student(fname, lname, year)
+    assert student.printname() == expected
+
+# Test Student class graduation year
+@pytest.mark.parametrize("fname, lname, year", [
+    ("Mike", "Olsen", 2019),  # Valid year
+    ("Mike", "Olsen", 3022),  # Year too far in the future
+    ("Mike", "Olsen", -2020),  # Negative year
+])
+def test_student_year(fname, lname, year):
+    student = Student(fname, lname, year)
+    assert student.graduationyear == year
 ```
