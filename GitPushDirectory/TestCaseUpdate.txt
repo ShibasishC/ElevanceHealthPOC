@@ -17,40 +17,29 @@ class Student(Person):
         self.graduationyear = year
 
 # unit tests
-@pytest.mark.parametrize("fname, lname, expected_name", [
-    ("John", "Doe", "John Doe"),  # testing with normal inputs
-    ("Jane", "Smith", "Jane Smith"),  # testing with different inputs
-    ("", "", " "),  # testing with empty strings
-])
-def test_person(fname, lname, expected_name):
+@pytest.mark.parametrize("fname, lname, expected", [("John", "Doe", "John Doe"), ("Jane", "Smith", "Jane Smith")])
+def test_person(fname, lname, expected):
+    # Test if the Person class correctly assigns firstname and lastname upon instantiation.
     person = Person(fname, lname)
     assert person.firstname == fname
     assert person.lastname == lname
-    assert person.printname() == expected_name
+    # Test if the printname method correctly prints the firstname and lastname of a Person instance.
+    assert person.printname() == expected
 
-@pytest.mark.parametrize("fname, lname, year, expected_name, expected_year", [
-    ("Mike", "Olsen", 2019, "Mike Olsen", 2019),  # testing with normal inputs
-    ("Anna", "Johnson", 2022, "Anna Johnson", 2022),  # testing with different inputs
-    ("", "", 0, " ", 0),  # testing with empty strings and zero year
-])
-def test_student(fname, lname, year, expected_name, expected_year):
+@pytest.mark.parametrize("fname, lname, year, expected", [("Mike", "Olsen", 2022, "Mike Olsen"), ("Emma", "Johnson", 2023, "Emma Johnson")])
+def test_student(fname, lname, year, expected):
+    # Test if the Student class correctly assigns firstname, lastname, and graduationyear upon instantiation.
     student = Student(fname, lname, year)
     assert student.firstname == fname
     assert student.lastname == lname
     assert student.graduationyear == year
-    assert student.printname() == expected_name
+    # Test if the printname method, inherited from the Person class, correctly prints the firstname and lastname of a Student instance.
+    assert student.printname() == expected
 
-def test_inheritance():
-    student = Student("Mike", "Olsen", 2019)
-    assert hasattr(student, 'printname')  # testing if Student class has inherited printname method from Person class
-
-def test_exceptions():
-    with pytest.raises(TypeError):
-        Person()  # testing if TypeError is raised when no arguments are passed
-    with pytest.raises(TypeError):
-        Student("Mike", "Olsen")  # testing if TypeError is raised when year is not passed
-    with pytest.raises(AttributeError):
-        person = Person("John", "Doe")
-        print(person.graduationyear)  # testing if AttributeError is raised when trying to access an attribute that doesn't exist
+@pytest.mark.parametrize("fname, lname, year", [("", "Doe", 2022), (123, "Doe", 2022), ("Mike", "", 2022), ("Mike", 123, 2022), ("Mike", "Olsen", "2022"), ("Mike", "Olsen", 2022.5)])
+def test_edge_cases(fname, lname, year):
+    # Test if the classes handle edge cases correctly, such as empty strings or non-string inputs for firstname and lastname, and non-integer inputs for graduationyear.
+    with pytest.raises(Exception):
+        student = Student(fname, lname, year)
 ```
-In the code above, I have modified the `printname` method to return a string instead of printing it, as it's easier to test functions that return values. The `pytest.mark.parametrize` decorator is used to run the same test function with different arguments. The `hasattr` function is used to check if an object has a given attribute. The `pytest.raises` context manager is used to check if a specific exception is raised.
+In the above code, I have modified the `printname` method to return a string instead of printing it, as it's easier to test functions that return their results. The `pytest.mark.parametrize` decorator is used to run the same test function with different arguments, which is useful for testing a function with a variety of inputs. The `pytest.raises` context manager is used to check that a certain exception is raised, which is useful for testing that a function correctly handles invalid input.
