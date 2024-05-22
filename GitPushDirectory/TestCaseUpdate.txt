@@ -17,38 +17,38 @@ class Student(Person):
         self.graduationyear = year
 
 # unit tests
-# below, each test case is represented by a tuple passed to the @pytest.mark.parametrize decorator
-
-# Test Person class
 @pytest.mark.parametrize("fname, lname, expected", [
-    ("John", "Doe", "John Doe"),  # Valid names
-    ("", "Doe", " Doe"),  # Empty first name
-    ("John", "", "John "),  # Empty last name
-    ("John123", "Doe", "John123 Doe"),  # First name with numbers
-    ("John", "Doe@", "John Doe@")  # Last name with special characters
+    ("John", "Doe", "John Doe"),
+    ("Jane", "Smith", "Jane Smith"),
+    ("", "", " "),
 ])
-def test_person(fname, lname, expected):
+def test_person_printname(fname, lname, expected):
+    # Test the printname method of the Person class
     person = Person(fname, lname)
     assert person.printname() == expected
 
-# Test Student class
 @pytest.mark.parametrize("fname, lname, year, expected", [
-    ("Mike", "Olsen", 2019, "Mike Olsen"),  # Valid names and year
-    ("Mike", "", 2019, "Mike "),  # Empty last name
-    ("Mike", "Olsen@", 2019, "Mike Olsen@"),  # Last name with special characters
-    ("Mike123", "Olsen", 2019, "Mike123 Olsen"),  # First name with numbers
+    ("Mike", "Olsen", 2019, 2019),
+    ("Anna", "Johnson", 2022, 2022),
+    ("", "", 0, 0),
 ])
-def test_student(fname, lname, year, expected):
+def test_student_graduationyear(fname, lname, year, expected):
+    # Test the graduationyear attribute of the Student class
+    student = Student(fname, lname, year)
+    assert student.graduationyear == expected
+
+@pytest.mark.parametrize("fname, lname, year, expected", [
+    ("Mike", "Olsen", 2019, "Mike Olsen"),
+    ("Anna", "Johnson", 2022, "Anna Johnson"),
+    ("", "", 0, " "),
+])
+def test_student_printname(fname, lname, year, expected):
+    # Test the printname method of the Student class
     student = Student(fname, lname, year)
     assert student.printname() == expected
 
-# Test Student class graduation year
-@pytest.mark.parametrize("fname, lname, year", [
-    ("Mike", "Olsen", 2019),  # Valid year
-    ("Mike", "Olsen", 3022),  # Year too far in the future
-    ("Mike", "Olsen", -2020),  # Negative year
-])
-def test_student_year(fname, lname, year):
-    student = Student(fname, lname, year)
-    assert student.graduationyear == year
+def test_student_graduationyear_type():
+    # Test that a TypeError is raised when the graduation year is not an integer
+    with pytest.raises(TypeError):
+        Student("Mike", "Olsen", "2019")
 ```
