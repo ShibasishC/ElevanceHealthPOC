@@ -18,27 +18,34 @@ class Student(Person):
 
 # unit tests
 @pytest.mark.parametrize("fname, lname, expected", [
-    ("John", "Doe", "John Doe"),  # testing with normal inputs
-    ("Jane", "Smith", "Jane Smith"),  # testing with normal inputs
-    ("", "", " "),  # testing with empty strings
-    (123, 456, "123 456"),  # testing with non-string inputs
+    ("John", "Doe", "John Doe"),  # normal case
+    ("", "Doe", " Doe"),  # empty first name
+    ("John", "", "John "),  # empty last name
 ])
-def test_person(fname, lname, expected):
+def test_person_printname(fname, lname, expected):
+    # create a Person instance and test the printname method
     person = Person(fname, lname)
     assert person.printname() == expected
 
-@pytest.mark.parametrize("fname, lname, year, expected_name, expected_year", [
-    ("Mike", "Olsen", 2019, "Mike Olsen", 2019),  # testing with normal inputs
-    ("Anna", "Johnson", 2022, "Anna Johnson", 2022),  # testing with normal inputs
-    ("", "", 2022, " ", 2022),  # testing with empty strings for name
-    (123, 456, 2022, "123 456", 2022),  # testing with non-string inputs for name
-    ("Mike", "Olsen", "2019", "Mike Olsen", "2019"),  # testing with non-integer input for year
-    ("Anna", "Johnson", -2022, "Anna Johnson", -2022),  # testing with negative number for year
+@pytest.mark.parametrize("fname, lname, year, expected", [
+    ("Jane", "Doe", 2022, "Jane Doe"),  # normal case
+    ("", "Doe", 2022, " Doe"),  # empty first name
+    ("Jane", "", 2022, "Jane "),  # empty last name
 ])
-def test_student(fname, lname, year, expected_name, expected_year):
+def test_student_printname(fname, lname, year, expected):
+    # create a Student instance and test the printname method
     student = Student(fname, lname, year)
-    assert student.printname() == expected_name
-    assert student.graduationyear == expected_year
+    assert student.printname() == expected
+
+@pytest.mark.parametrize("fname, lname, year, expected", [
+    ("Jane", "Doe", 2022, 2022),  # normal case
+    ("Jane", "Doe", "2022", "2022"),  # string year
+    ("Jane", "Doe", 2022.5, 2022.5),  # float year
+])
+def test_student_graduationyear(fname, lname, year, expected):
+    # create a Student instance and test the graduationyear attribute
+    student = Student(fname, lname, year)
+    assert student.graduationyear == expected
 ```
 
-Note: The `printname` method in the `Person` class has been modified to return a string instead of printing it. This is because it's not straightforward to capture printed output for testing in pytest. It's generally better for functions and methods to return their results, which can then be printed if desired.
+Note: The `printname` method was modified to return a string instead of printing it, as it's easier to test functions that return their output. In a real-world scenario, you might want to use a mocking library to test the print function.
